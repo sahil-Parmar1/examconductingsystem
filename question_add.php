@@ -1,5 +1,9 @@
 <?php
 session_start();
+if(isset($_GET['exam_id']))
+{
+    $_SESSION['exam_id']=$_GET['exam_id'];
+}
 if (!isset($_SESSION['examinerusername']) || !isset($_SESSION['examinercourse'])) {
     // Redirect to login page
     header("Location: examiner_login.php");
