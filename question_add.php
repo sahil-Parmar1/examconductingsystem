@@ -62,6 +62,32 @@ if ($result && $result->num_rows > 0) {
 } else {
     echo "No exam found with the name '$examname'.";
 }
+
+if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
+    // Handle the AJAX request
+    if (!isset($_SESSION['exam_id'])) {
+        echo json_encode(['error' => 'Exam ID not set']);
+        exit;
+    }
+
+    $exam_id = $_SESSION['exam_id'];
+    $conn = new mysqli('localhost', 'root', '', $_SESSION['examinercourse']);
+    if ($conn->connect_error) {
+        echo json_encode(['error' => $conn->connect_error]);
+        exit;
+    }
+
+    $examtable = $exam_id . "_exam";
+    $sql = "SELECT COUNT(*) as count FROM `$examtable`";
+    $result = $conn->query($sql);
+
+    if ($result && $row = $result->fetch_assoc()) {
+        echo json_encode(['count' => $row['count']]);
+    } else {
+        echo json_encode(['count' => 0]);
+    }
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -70,6 +96,17 @@ if ($result && $result->num_rows > 0) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>question add</title>
   <style>
+     .success-message {
+        background-color: #d4edda; /* Light green background */
+        color: #155724; /* Dark green text */
+        padding: 10px;
+        border: 1px solid #c3e6cb; /* Border color */
+        border-radius: 5px; /* Rounded corners */
+        font-size: 16px;
+        margin: 10px 0;
+        text-align: center;
+        font-weight: bold;
+    }
     .dynamic-div {
       display: none;
       margin-top: 10px;
@@ -146,8 +183,35 @@ if ($result && $result->num_rows > 0) {
         display: block;
     }
   </style>
+  <script>
+    async function updateQuestionCount() {
+        try {
+            const response = await fetch('', {
+                method: 'GET',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            });
+            const data = await response.json();
+
+            if (data.error) {
+                console.error('Error:', data.error);
+            } else {
+                const totalQuestions = <?php echo htmlspecialchars($total_questions); ?>;
+                document.getElementById('question-count').innerText =
+                    `Questions: ${data.count}/${totalQuestions}`;
+            }
+        } catch (error) {
+            console.error('Fetch error:', error);
+        }
+    }
+
+    // Call updateQuestionCount initially and set interval for live update
+    updateQuestionCount();
+    setInterval(updateQuestionCount, 5000); // Update every 5 seconds
+</script>
+
 </head>
 <body>
+    <form method="POST" action="question_add.php">
 
   <center><h1>Add Questions</h1>
  
@@ -155,21 +219,75 @@ if ($result && $result->num_rows > 0) {
   <h2><?php echo htmlspecialchars($subject_name)."(".htmlspecialchars($subject_code).")"?></h2>
   <h2><?php echo htmlspecialchars($examname)?></h2>
   <h3><?php echo "[".htmlspecialchars($dateofexam)." ".htmlspecialchars($timeofexam)." ]" ?></h3>
-     <h2><?php 
-         $sql="SELECT *FROM $examtable ORDER BY id DESC LIMIT 1";
-         $result=$conn->query($sql);
-         if($result && $result->num_rows>0)
-          {
-              $row=$result->fetch_assoc();
-              $question_index=$row['id'];
-          }
-          else
-          {
-            $question_index=0;
-          }
-       echo "Questions :".htmlspecialchars($question_index)."/".htmlspecialchars($total_questions);?></h2>
+  <h2 id="question-count">Questions: 0/<?php echo htmlspecialchars($total_questions); ?></h2>
+
        <h6>*You can add more than <?php echo htmlspecialchars($total_questions);?> as extra Questions</h6>
+       <?php
+  
+ 
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+               
+                if (isset($_POST['addobjective'])) {
+                   
+                    $examtable = mysqli_real_escape_string($conn, $examtable); // Ensure $examtable is sanitized
+                    $checkTableSql = "SHOW TABLES LIKE '$examtable'";
+                    $result = $conn->query($checkTableSql);
+            
+                    if ($result && $result->num_rows > 0) {
+                       
+                        insertData($conn, $examtable, $_POST);
+                        
+                    } else {
+                        $createTableSql = "
+                            CREATE TABLE `$examtable` (
+                                `id` INT NOT NULL AUTO_INCREMENT,
+                                `type` VARCHAR(25) NOT NULL,
+                                `question_option` VARCHAR(5000) NOT NULL,
+                                `ans` VARCHAR(5000) NOT NULL,
+                                `question` VARCHAR(5000) NOT NULL,
+                                PRIMARY KEY (`id`)
+                            ) ENGINE = MyISAM
+                        ";
+                        if ($conn->query($createTableSql) === TRUE) {
+                            
+                            insertData($conn, $examtable, $_POST);
+                           
+                        } else {
+                            echo "Error creating table: " . $conn->error;
+                        }
+                    }
+                }
+            }
+            
+            function insertData($conn, $examtable, $postData) {
+                $sql = "INSERT INTO `$examtable` (`type`, `question_option`, `ans`, `question`) VALUES (?, ?, ?, ?)";
+                $stmt = $conn->prepare($sql);
+                if (!$stmt) {
+                    echo "Error preparing statement: " . $conn->error;
+                    return;
+                }
+            
+                $type = "Objective";
+                $question = $postData['question_textarea'];
+                $optionA = $postData['optionA'];
+                $optionB = $postData['optionB'];
+                $optionC = $postData['optionC'];
+                $optionD = $postData['optionD'];
+                $answer = $postData['answer_select'];
+                $question_option = implode(",,", [$optionA, $optionB, $optionC, $optionD]);
+            
+                $stmt->bind_param("ssss", $type, $question_option, $answer, $question);
+                if ($stmt->execute()) {
+                    echo '<br><div class="success-message">1 Question Added Successfully</div><br>';
+                } else {
+                    echo "Error inserting data: " . $stmt->error;
+                }
+                $stmt->close();
+            }
+  
+  
        
+       ?>
   <select id="dropdownMenu">
     <option value="" disabled selected>Select an Questions type:</option>
     <option value="d1">Objective</option>
@@ -182,7 +300,9 @@ if ($result && $result->num_rows > 0) {
         <table align="center">
             <tr>
                 <td><label for="question_textarea">Question:</label></td>
-                <td><textarea id="question_textarea" placeholder="Enter your question here..." class="select"></textarea><br>
+                <td><textarea id="question_textarea"  
+                name="question_textarea"
+                placeholder="Enter your question here..." class="select"></textarea><br>
                 <div class="error" id="question_error"></div>
                  </td>
             </tr>
@@ -191,17 +311,27 @@ if ($result && $result->num_rows > 0) {
                 <td>
                     <table>
                         <tr>
-                            <td>A <input type="text" id="optionA" placeholder="Option A" class="select"><br>   <div class="error" id="optionA_error"></div></td>
-                            <td>B <input type="text" id="optionB" placeholder="Option B" class="select"><br>   <div class="error" id="optionB_error"></div></td>
+                            <td>A <input type="text" id="optionA" 
+                            name="optionA"
+                            placeholder="Option A" class="select"><br>   <div class="error" id="optionA_error"></div></td>
+                            <td>B <input type="text" id="optionB" 
+                            name="optionB"
+                            placeholder="Option B" class="select"><br>   <div class="error" id="optionB_error"></div></td>
                         </tr>
                         <tr>
-                            <td>C <input type="text" id="optionC" placeholder="Option C" class="select"><br>   <div class="error" id="optionC_error"></div></td>
-                            <td>D <input type="text" id="optionD" placeholder="Option D" class="select"><br>   <div class="error" id="optionD_error"></div></td>
+                            <td>C <input type="text" id="optionC" 
+                            name="optionC"
+                            placeholder="Option C" class="select"><br>   <div class="error" id="optionC_error"></div></td>
+                            <td>D <input type="text" id="optionD" 
+                            name="optionD"
+                            placeholder="Option D" class="select"><br>   <div class="error" id="optionD_error"></div></td>
                         </tr>
                         <tr>
                             <td>Answer:</td>
                             <td>
-                                <select id="answer_select" class="select">
+                                <select id="answer_select" 
+                                name="answer_select"
+                                class="select">
                                     <option value="A">A</option>
                                     <option value="B">B</option>
                                     <option value="C">C</option>
@@ -211,7 +341,7 @@ if ($result && $result->num_rows > 0) {
                         </tr>
                         <tr class="actions">
                             <td><button id="clear" onclick="clearFields()">Clear</button></td>
-                            <td><button id="add" type="submit" onclick="validateObjectiveQuestionForm(event)">Add</button></td>
+                            <td><button id="addobjective" type="submit" name="addobjective" onclick="validateObjectiveQuestionForm(event)">Add</button></td>
                         </tr>
                     </table>
                 </td>
@@ -449,6 +579,6 @@ if ($result && $result->num_rows > 0) {
 </footer>
 
 
-
+</form>
 </body>
 </html>
