@@ -257,6 +257,67 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'
                         }
                     }
                 }
+
+                if (isset($_POST['addtruefalse'])) {
+                   
+                    $examtable = mysqli_real_escape_string($conn, $examtable); // Ensure $examtable is sanitized
+                    $checkTableSql = "SHOW TABLES LIKE '$examtable'";
+                    $result = $conn->query($checkTableSql);
+            
+                    if ($result && $result->num_rows > 0) {
+                       
+                        insertDataTF($conn, $examtable, $_POST);
+                        
+                    } else {
+                        $createTableSql = "
+                            CREATE TABLE `$examtable` (
+                                `id` INT NOT NULL AUTO_INCREMENT,
+                                `type` VARCHAR(25) NOT NULL,
+                                `question_option` VARCHAR(5000) NOT NULL,
+                                `ans` VARCHAR(5000) NOT NULL,
+                                `question` VARCHAR(5000) NOT NULL,
+                                PRIMARY KEY (`id`)
+                            ) ENGINE = MyISAM
+                        ";
+                        if ($conn->query($createTableSql) === TRUE) {
+                            
+                            insertDataTF($conn, $examtable, $_POST);
+                           
+                        } else {
+                            echo "Error creating table: " . $conn->error;
+                        }
+                    }
+                }
+                if (isset($_POST['addFill'])) {
+                   
+                    $examtable = mysqli_real_escape_string($conn, $examtable); // Ensure $examtable is sanitized
+                    $checkTableSql = "SHOW TABLES LIKE '$examtable'";
+                    $result = $conn->query($checkTableSql);
+            
+                    if ($result && $result->num_rows > 0) {
+                       
+                        insertDataFILL($conn, $examtable, $_POST);
+                        
+                    } else {
+                        $createTableSql = "
+                            CREATE TABLE `$examtable` (
+                                `id` INT NOT NULL AUTO_INCREMENT,
+                                `type` VARCHAR(25) NOT NULL,
+                                `question_option` VARCHAR(5000) NOT NULL,
+                                `ans` VARCHAR(5000) NOT NULL,
+                                `question` VARCHAR(5000) NOT NULL,
+                                PRIMARY KEY (`id`)
+                            ) ENGINE = MyISAM
+                        ";
+                        if ($conn->query($createTableSql) === TRUE) {
+                            
+                            insertDataFILL($conn, $examtable, $_POST);
+                           
+                        } else {
+                            echo "Error creating table: " . $conn->error;
+                        }
+                    }
+                }
             }
             
             function insertData($conn, $examtable, $postData) {
@@ -285,7 +346,48 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'
                 $stmt->close();
             }
   
-  
+            function insertDataTF($conn, $examtable, $postData) {
+                $sql = "INSERT INTO `$examtable` (`type`, `question_option`, `ans`, `question`) VALUES (?, ?, ?, ?)";
+                $stmt = $conn->prepare($sql);
+                if (!$stmt) {
+                    echo "Error preparing statement: " . $conn->error;
+                    return;
+                }
+            
+                $type = "TF";
+                $question = $postData['question_textarea_true'];
+                 $answer = $postData['answer_select_true'];
+                $question_option = implode(",,", ["TRUE","FALSE"]);
+            
+                $stmt->bind_param("ssss", $type, $question_option, $answer, $question);
+                if ($stmt->execute()) {
+                    echo '<br><div class="success-message">1 Question Added Successfully</div><br>';
+                } else {
+                    echo "Error inserting data: " . $stmt->error;
+                }
+                $stmt->close();
+            }
+            function insertDataFILL($conn, $examtable, $postData) {
+                $sql = "INSERT INTO `$examtable` (`type`, `question_option`, `ans`, `question`) VALUES (?, ?, ?, ?)";
+                $stmt = $conn->prepare($sql);
+                if (!$stmt) {
+                    echo "Error preparing statement: " . $conn->error;
+                    return;
+                }
+            
+                $type = "fill";
+                $question = $postData['question_textarea_fill'];
+                 $answer = strtoupper($postData['answer_text_fill']);
+                $question_option = "-";
+            
+                $stmt->bind_param("ssss", $type, $question_option, $answer, $question);
+                if ($stmt->execute()) {
+                    echo '<br><div class="success-message">1 Question Added Successfully</div><br>';
+                } else {
+                    echo "Error inserting data: " . $stmt->error;
+                }
+                $stmt->close();
+            }
        
        ?>
   <select id="dropdownMenu">
@@ -475,7 +577,7 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'
         <table align="center">
             <tr>
                 <td><label for="question_textarea_true">Question:</label>
-                <td><textarea id="question_textarea_true" placeholder="Enter your question here..." class="select"></textarea><br>
+                <td><textarea id="question_textarea_true" name="question_textarea_true" placeholder="Enter your question here..." class="select"></textarea><br>
                 <div class="error" id="question_error_true"></div>
                  </td>
 
@@ -483,9 +585,9 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'
             <tr>
                             <td>Answer:</td>
                             <td>
-                                <select id="answer_select_true" class="select">
-                                    <option value="True">True</option>
-                                    <option value="False">False</option>
+                                <select id="answer_select_true"  name="answer_select_true" class="select">
+                                    <option value="TRUE">True</option>
+                                    <option value="FALSE">False</option>
                                 </select><br>
                                 <div class="error" id="answer_error_true"></div>
                             </td>
@@ -494,7 +596,7 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'
                 
                         <tr class="actions">
                             <td><button id="clear" onclick="clearFields_true()">Clear</button></td>
-                            <td><button id="add" type="submit" onclick="validateObjectiveQuestionForm_true(event)">Add</button></td>
+                            <td><button id="addtruefalse" name="addtruefalse" type="submit" onclick="validateObjectiveQuestionForm_true(event)">Add</button></td>
                         </tr>
                  
            
@@ -505,7 +607,7 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'
         <table align="center">
             <tr>
                 <td><label for="question_textarea_fill">Question:</label></td>
-                <td><textarea id="question_textarea_fill" placeholder="Enter your question here..." class="select"></textarea><br>
+                <td><textarea id="question_textarea_fill" name="question_textarea_fill" placeholder="Enter your question here..." class="select"></textarea><br>
                
                 <h5>[* use '____'(underscore) to represent the blank in question]</h5> <br>
                 <div class="error" id="question_error_fill"></div>
@@ -515,7 +617,7 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'
             <tr>
                             <td>Answer:</td>
                             <td>
-                                <input type="text" class="select" id="answer_text_fill" placeholder="Enter your Ans here"/>
+                                <input type="text" class="select" id="answer_text_fill" name="answer_text_fill" placeholder="Enter your Ans here"/>
                                 <div class="error" id="answer_error_fill"></div>
                             </td>
                         </tr>
@@ -523,7 +625,7 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'
                 
                         <tr class="actions">
                             <td><button id="clear" onclick="clearFields_fill()">Clear</button></td>
-                            <td><button id="add" type="submit" onclick="validateObjectiveQuestionForm_fill(event)">Add</button></td>
+                            <td><button id="addFill" name="addFill" type="submit" onclick="validateObjectiveQuestionForm_fill(event)">Add</button></td>
                         </tr>
                  
            
