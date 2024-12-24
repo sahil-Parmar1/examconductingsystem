@@ -4,9 +4,48 @@ if (!isset($_SESSION['studentusername']) || !isset($_SESSION['studentcourse']) |
     header("Location: student_login.php");
     exit;
 }
-$name=$_SESSION['studentusername'];
+$username=$_SESSION['studentusername'];
 $course=$_SESSION['studentcourse'];
 $semester=$_SESSION['studentsemester'];
+$conn = new mysqli("localhost", "root", "", $course);
+$student_id=0;
+$roll=0;
+$name='';
+$sql="SELECT * FROM `student_info` WHERE `username` LIKE '".$username."'";
+$result = $conn->query($sql);
+if ($result && $result->num_rows > 0) {
+    // Fetch the row
+    $row = $result->fetch_assoc();
+    $student_id=$row['id'];
+    $roll=$row['roll'];
+    $name=$row['name'];
+}
+else
+{
+    echo "No student found";
+    exit;
+}
+$checkTableSql = "SHOW TABLES LIKE '".$student_id."_student'";
+$result = $conn->query($checkTableSql);
+
+if ($result && $result->num_rows > 0) {
+//create a id_student table
+
+}
+else
+{
+
+}
+if($_SERVER['REQUEST_METHOD']=='POST')
+{
+   if(isset($_POST['logout']))
+   {
+      session_destroy();
+      header("Location: student_login.php");
+      exit;
+   }
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
