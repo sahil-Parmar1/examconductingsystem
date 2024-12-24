@@ -7,6 +7,20 @@ if (!isset($_SESSION['examinerusername']) || !isset($_SESSION['examinercourse'])
     header("Location: examiner_login.php");
     exit;
 }
+ // Establish database connection
+ $conn = new mysqli('localhost', 'root', '', $_SESSION['examinercourse']);
+ if ($conn->connect_error) {
+     die("Connection failed: " . $conn->connect_error);
+ }
+ $semesters=0;
+ $sql="SELECT * FROM `admin_info` WHERE `course` LIKE '".$_SESSION['examinercourse']."'";
+    $result = $conn->query($sql);
+    if ($result && $result->num_rows > 0) {
+        // Fetch the row
+        $row = $result->fetch_assoc();
+        $semesters=$row['semesters'];
+    }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -157,6 +171,17 @@ if (!isset($_SESSION['examinerusername']) || !isset($_SESSION['examinercourse'])
 <body>
     <h1>Exam Information</h1>
     <form method="POST" action="" onsubmit="validateForm(event)">
+    <div class="form-group">
+            <label for="semester">Semester:</label>
+            <select id="semester" name="semester">
+                <?php
+                for ($i = 1; $i <= $semesters; $i++) {
+                    echo "<option value='$i'>Semester $i</option>";
+                }
+                ?>
+                </select>
+            
+        </div>
         <div class="form-group">
             <label for="exam_name">Exam Name:</label>
             <input type="text" id="exam_name" name="exam_name">
@@ -236,6 +261,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $dateofexam = $_POST['exam_date'];
     $timelimit = intval($_POST['duration']);
     $negativemarks = isset($_POST['negative_marks']) ? intval($_POST['negative_marks']) : null;
+    $semester=intval($_POST['semester']);
          
     // Check if the table already exists
     $checkTableSql = "SHOW TABLES LIKE 'exams'";
@@ -244,10 +270,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if($result->num_rows > 0)
     {
         //insert the data
-            $sql = "INSERT INTO `exams` (`exam_name`, `subject_id`, `examinerusername`, `total_question`, `perquestion_mark`, `total_marks`, `timeofexam`, `dateofexam`, `timelimit`, `negative_mark`)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $sql = "INSERT INTO `exams` (`exam_name`, `subject_id`, `examinerusername`, `total_question`, `perquestion_mark`, `total_marks`, `timeofexam`, `dateofexam`, `timelimit`, `negative_mark`,`semester`)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                $stmt = $conn->prepare($sql);
-               $stmt->bind_param("sisiiissii",$examname,$subject_id,$examiner,$totalquestion,$perquestionmarks,$totalmarks,$timeofexam,$dateofexam,$timelimit,$negativemarks);
+               $stmt->bind_param("sisiiissiii",$examname,$subject_id,$examiner,$totalquestion,$perquestionmarks,$totalmarks,$timeofexam,$dateofexam,$timelimit,$negativemarks,$semester);
                if($stmt->execute())
                {
                 $sql = "SELECT exam_id FROM exams WHERE exam_name = '$examname'";
@@ -287,16 +313,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         `dateofexam` DATE NOT NULL,
                         `timelimit` INT NOT NULL,
                         `negative_mark` INT DEFAULT NULL,
+                        `semester` INT NOT NULL,
                         PRIMARY KEY (`exam_id`)
                     ) ENGINE = MyISAM;
                 ";
 
                 // Execute the query
                 if ($conn->query($sql) === TRUE) {
-                    $sql = "INSERT INTO `exams` (`exam_name`, `subject_id`, `examinerusername`, `total_question`, `perquestion_mark`, `total_marks`, `timeofexam`, `dateofexam`, `timelimit`, `negative_mark`)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    $sql = "INSERT INTO `exams` (`exam_name`, `subject_id`, `examinerusername`, `total_question`, `perquestion_mark`, `total_marks`, `timeofexam`, `dateofexam`, `timelimit`, `negative_mark`,`semester`)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                        $stmt = $conn->prepare($sql);
-                       $stmt->bind_param("sisiiissii",$examname,$subject_id,$examiner,$totalquestion,$perquestionmarks,$totalmarks,$timeofexam,$dateofexam,$timelimit,$negativemarks);
+                       $stmt->bind_param("sisiiissiii",$examname,$subject_id,$examiner,$totalquestion,$perquestionmarks,$totalmarks,$timeofexam,$dateofexam,$timelimit,$negativemarks,$semester);
                        if($stmt->execute())
                        {
                         $sql = "SELECT exam_id FROM exams WHERE exam_name = '$examname'";
