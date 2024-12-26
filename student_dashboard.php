@@ -44,7 +44,7 @@ if ($result && $result->num_rows > 0) {
                 $attended_exam[] = $row['exam_id'];
             }
         } else {
-            echo "No exam data found";
+            echo "";
         }
 }
 else
@@ -69,7 +69,7 @@ else
                             $attended_exam[] = $row['exam_id'];
                         }
                     } else {
-                        echo "No exam data found";
+                        echo "";
                     }
             } else {
                 echo "Error creating table: " . $conn->error;
@@ -86,7 +86,7 @@ if ($result && $result->num_rows > 0) {
         }
     }
 } else {
-    echo "No exams found";
+    echo "";
 }
 
 
@@ -235,7 +235,7 @@ if (!empty($remaining_exam)) {
                         <td>$total_marks</td>
                         <td style='color:blue'>$date_of_exam</td>
                         <td style='color:blue'>$time_of_exam</td>
-                        <td><a href='exam_page.php?exam_id=$exam_id'>Attend ⏭</a></td>
+                        <td><a href='exam_check.php?exam_id=$exam_id'>Attend ⏭</a></td>
                       </tr>";
             } else {
                 echo "<tr><td colspan='6'>Subject details not found for Exam ID: $exam_id</td></tr>";
