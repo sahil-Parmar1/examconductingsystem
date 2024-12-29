@@ -15,73 +15,7 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['course'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-        }
-
-        header {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 20px;
-            text-align: center;
-        }
-
-        .sidebar {
-            width: 250px;
-            background-color: #343a40;
-            color: white;
-            position: fixed;
-            height: 100%;
-            padding-top: 20px;
-        }
-
-        .sidebar a {
-            display: block;
-            color: white;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-bottom: 1px solid #474f57;
-        }
-
-        .sidebar a:hover {
-            background-color: #495057;
-        }
-
-        .content {
-            margin-left: 250px;
-            padding: 20px;
-        }
-
-        .main-options {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 30px;
-        }
-
-        .option {
-            background-color: #ffffff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            width: 45%;
-            padding: 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .option:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .option h2 {
-            color: #007bff;
-        }
-    </style>
+    <link rel="stylesheet" href="admin_dashboard.css">
 </head>
 <body>
 

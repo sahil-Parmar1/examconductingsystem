@@ -107,52 +107,7 @@ if($_SERVER['REQUEST_METHOD']=='POST')
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Dashboard</title>
-    <style>
-        #liveDateTime {
-            font-size: 1.5rem;
-            color: #333;
-        }
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-        }
-
-        header {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 20px;
-            text-align: center;
-        }
-
-        .content {
-            margin-left: 100px;
-            padding: 20px;
-        }
-
-        .main-options {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 30px;
-        }
-
-        .option {
-            background-color: #ffffff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            width: 45%;
-            padding: 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .option:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-    </style>
+    <link rel="stylesheet" href="student_dashboard.css">
 </head>
 <body>
     <form action="student_dashboard.php" method="POST">

@@ -1,0 +1,138 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+header {
+    background-color: #007bff;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+header h2 {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+header h3 {
+    font-size: 18px;
+    color: #f1f1f1;
+    margin-bottom: 15px;
+}
+
+header h6 {
+    margin-top: 10px;
+}
+
+#logout {
+    background-color: #ff5733;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+#logout:hover {
+    background-color: #e14a2d;
+    transform: scale(1.05);
+}
+
+.content {
+    margin: 30px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.content h2 {
+    font-size: 24px;
+    color: #007bff;
+    margin-bottom: 20px;
+}
+
+.main-options {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.option {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 45%;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.option:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.option h2 {
+    color: #007bff;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.option p {
+    font-size: 14px;
+    color: #555;
+}
+
+@media (max-width: 768px) {
+    .main-options {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .option {
+        width: 80%;
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 24px;
+    }
+
+    header h2 {
+        font-size: 20px;
+    }
+
+    .content h2 {
+        font-size: 20px;
+    }
+
+    .option h2 {
+        font-size: 18px;
+    }
+
+    .option p {
+        font-size: 12px;
+    }
+}

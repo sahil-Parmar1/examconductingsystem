@@ -1,0 +1,70 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f0f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: #333;
+}
+
+/* Container Styling */
+.container {
+    text-align: center;
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 400px;
+}
+
+/* Button Styling */
+button, .btn {
+    display: inline-block;
+    padding: 12px 20px;
+    font-size: 16px;
+    margin: 10px 0;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    text-decoration: none;
+    background: linear-gradient(135deg, #007BFF, #0056b3);
+    color: #fff;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0px 4px 6px rgba(0, 123, 255, 0.4);
+}
+
+button:hover, .btn:hover {
+    background: linear-gradient(135deg, #0056b3, #003f8a);
+    box-shadow: 0px 6px 12px rgba(0, 123, 255, 0.6);
+    transform: translateY(-2px);
+}
+
+button:active, .btn:active {
+    transform: translateY(1px);
+    box-shadow: 0px 3px 6px rgba(0, 123, 255, 0.3);
+}
+
+/* Header Styling */
+h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Adjust anchor buttons */
+.btn {
+    display: block;
+    margin: 10px auto;
+    text-align: center;
+    width: 80%;
+}

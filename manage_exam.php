@@ -10,6 +10,7 @@ if (!isset($_SESSION['examinerusername']) || !isset($_SESSION['examinercourse'])
 <html>
 <head>
     <title>Manage Exam</title>
+    <link rel="stylesheet" href="manage_exam.css">
 </head>
 <script>
         // JavaScript function to confirm deletion

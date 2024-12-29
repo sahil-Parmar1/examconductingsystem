@@ -1,0 +1,153 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+header {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+header h1 {
+    font-size: 28px;
+    font-weight: 700;
+}
+
+header h2, header h3 {
+    font-size: 18px;
+    font-weight: 400;
+}
+
+header button {
+    background-color: #ff5733;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+header button:hover {
+    background-color: #e14a2d;
+}
+
+header #liveDateTime {
+    font-size: 1.1rem;
+    color: #fff;
+}
+
+/* Main Content */
+.content {
+    margin: 100px 20px 20px 20px;
+    padding: 20px;
+}
+
+.remaining_exam {
+    margin-top: 30px;
+}
+
+h3 {
+    font-size: 24px;
+    color: #007bff;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+th {
+    background-color: #007bff;
+    color: white;
+    font-weight: 600;
+}
+
+td {
+    font-size: 14px;
+    color: #555;
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .content {
+        margin: 80px 10px 10px 10px;
+    }
+
+    table {
+        font-size: 12px;
+    }
+
+    header h1 {
+        font-size: 24px;
+    }
+
+    header h2, header h3 {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .content {
+        margin: 70px 10px 10px 10px;
+    }
+
+    header h1 {
+        font-size: 20px;
+    }
+
+    header h2, header h3 {
+        font-size: 14px;
+    }
+
+    table {
+        font-size: 10px;
+    }
+
+    th, td {
+        padding: 10px;
+    }
+
+    a {
+        font-size: 12px;
+    }
+}
