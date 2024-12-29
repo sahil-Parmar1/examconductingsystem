@@ -335,6 +335,20 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'
                 $optionC = $postData['optionC'];
                 $optionD = $postData['optionD'];
                 $answer = $postData['answer_select'];
+                switch ($answer) {
+                    case 'A':
+                        $answer = $optionA;
+                        break;
+                    case 'B':
+                        $answer = $optionB;
+                        break;
+                    case 'C':
+                        $answer = $optionC;
+                        break;
+                    case 'D':
+                        $answer = $optionD;
+                        break;
+                }
                 $question_option = implode(",,", [$optionA, $optionB, $optionC, $optionD]);
             
                 $stmt->bind_param("ssss", $type, $question_option, $answer, $question);
