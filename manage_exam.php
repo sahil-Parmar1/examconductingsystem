@@ -45,7 +45,7 @@ if (!isset($_SESSION['examinerusername']) || !isset($_SESSION['examinercourse'])
     $sql = "SELECT * FROM exams WHERE examinerusername = '" . $_SESSION['examinerusername'] . "'";
     $result = $conn->query($sql);
 
-    if ($result->num_rows > 0) {
+    if ($result &&$result->num_rows > 0) {
         // Output data of each row
         echo "  <table>
         <tr>

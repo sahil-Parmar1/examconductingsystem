@@ -198,8 +198,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
        // echo "<br><br>Total Marks: ".$total_marks;
        
         $_SESSION['obtain_marks']=$total_marks;
+
+        // Check if student_id table exists
+        // Fetch the student ID from the student_info table using the username
+        $studentIdSql = "SELECT id FROM student_info WHERE username = ?";
+        $studentIdStmt = $conn->prepare($studentIdSql);
+        if ($studentIdStmt === FALSE) {
+            die("Error preparing the student ID statement: " . $conn->error);
+        }
+        $studentIdStmt->bind_param("s", $username);
+        $studentIdStmt->execute();
+        $studentIdResult = $studentIdStmt->get_result();
+        $student_id = 0;
+        if ($studentIdResult->num_rows > 0) {
+            $studentIdRow = $studentIdResult->fetch_assoc();
+            $student_id = $studentIdRow['id'];
+        } else {
+            die("Student ID not found for username: " . $username);
+        }
+        $studentIdStmt->close();
+        $studenttable=$student_id."_student";
+        $checkTableSql = "SHOW TABLES LIKE '$studenttable'";
+        $tableResult = $conn->query($checkTableSql);
+
+        if ($tableResult->num_rows == 0) {
+            // Create student_id table if it does not exist
+            $createTableSql = "CREATE TABLE $studenttable (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                exam_id INT NOT NULL,
+                obtain_marks FLOAT NOT NULL,
+                total_marks FLOAT NOT NULL,
+               
+            )";
+            
+            if ($conn->query($createTableSql) === FALSE) {
+                die("Error creating student_id table: " . $conn->error);
+            }
+        }
+
+        // Insert the student's exam result into the student_id table
+        $insertResultSql = "INSERT INTO $studenttable (exam_id, obtain_marks, total_marks) VALUES (?, ?, ?)";
+        $insertStmt = $conn->prepare($insertResultSql);
+        if ($insertStmt === FALSE) {
+            die("Error preparing the insert statement: " . $conn->error);
+        }
+        $insertStmt->bind_param("idd", $exam_id, $total_marks, $_SESSION['total_marks']);
+        $insertStmt->execute();
+        $insertStmt->close();
         //redirect to result page
-        header("Location: exam_result.php?exam_id=$exam_id");
+        header("Location: exam_result.php?total_marks=".$_SESSION['total_marks']."&obtain_marks=".$_SESSION['obtain_marks']."&total_question=".$_SESSION['total_question']."&negative_marks=".$_SESSION['negative_mark']);
         exit;
     }
 }
