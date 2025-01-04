@@ -288,7 +288,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
                 
             
-                echo "<h3 style='color: green;'>$examname and $exam_id is added..<br>Now you can  <a href='question_add.php'>add question</a> </h3>";
+                echo "<h3 style='color: green;'>$examname and $exam_id is added..<br>Now you can  <a href='addquestionwithexcel.php?exam_id=".$exam_id."&total_question=".$totalquestion."'>add question</a> </h3>";
                  
                }
                else
@@ -336,7 +336,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         } else {
                             echo "No exam found with the name '$examname'.";
                         }
-                        echo "<h3 style='color: green;'>$examname is added..<br>Now you can  <a href='question_add.php'>add question</a> </h3>";
+                        echo "<h3 style='color: green;'>$examname is added..<br>Now you can  <a href='addquestionwithexcel.php?exam_id=".$exam_id."&total_question=".$totalquestion."'>add question</a> </h3>";
                        }
                        else
                        {

@@ -3,10 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Member Actions</title>
+    <title>Exam Conducted System</title>
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
+    <header>
+        <img src="logo.png" alt="Logo" style="width:100px;height:auto;">
+        <h1>Welcome to the Exam Conducted System</h1>
+    </header>
     <div class="container">
         <button onclick="window.location.href='create_member.php'">Create a New Member</button>
         <br>

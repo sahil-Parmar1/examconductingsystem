@@ -4,26 +4,39 @@ if($_SERVER['REQUEST_METHOD']=='POST')
 {
   if(isset($_POST['submit']))
   {
-    
-    $course = $_POST['course'];
-    $semester = $_POST['semester'];
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-    // Database connection
-    $conn = new mysqli("localhost", "root", "", $course);
-    $sql = "SELECT * FROM `student_info` WHERE `username` = '$username' AND `password` = '$password' AND `semester` = '$semester'";
-    $result = $conn->query($sql);
-    if ($result && $result->num_rows > 0) {
-        session_start();
-        $_SESSION['studentusername']=$username;
-        $_SESSION['studentcourse']=$course;
-        $_SESSION['studentsemester']=$semester;
-        header("Location: student_dashboard.php");
+    if(!isset($_POST['semester'])||!isset($_POST['course']))
+    {
+        echo "<script>
+            alert('Course semester is not set!');
+            window.location.href = 'student_login.php';
+              </script>";
         exit;
-    } else {
-        echo "<script>alert('Invalid username or password!');</script>";
+        
     }
-    unset($_POST['course']);
+    else
+    {
+    $course = $_POST['course'];
+        $semester = $_POST['semester'];
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+        // Database connection
+        $conn = new mysqli("localhost", "root", "", $course);
+        $sql = "SELECT * FROM `student_info` WHERE `username` = '$username' AND `password` = '$password' AND `semester` = '$semester'";
+        $result = $conn->query($sql);
+        if ($result && $result->num_rows > 0) {
+            session_start();
+            $_SESSION['studentusername']=$username;
+            $_SESSION['studentcourse']=$course;
+            $_SESSION['studentsemester']=$semester;
+            header("Location: student_dashboard.php");
+            exit;
+        } else {
+            echo "<script>alert('Invalid username or password!');</script>";
+        }
+        unset($_POST['course']);
+    }
+    
+   
   }
 }
 // Handle AJAX request

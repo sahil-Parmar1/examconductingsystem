@@ -14,16 +14,20 @@ if ($conn->connect_error) {
 
 // Fetch subjects from the database
 $subjects = [];
+// Check if the table 'subjects' exists
+$tableExists = $conn->query("SHOW TABLES LIKE 'subjects'");
+if ($tableExists->num_rows == 0) {
+    // Create the table if it does not exist
+    $_SESSION['error'] = "You need to add subjects before creating an examiner.";
+    header("Location: adremovesubject.php");
+    exit;
+}
 $sql = "SELECT id, subject_name, subject_code FROM subjects";
 $result = $conn->query($sql);
 if ($result && $result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         $subjects[] = $row;
     }
-} else {
-    $_SESSION['error'] = "You need to add subjects before creating an examiner.";
-    header("Location: adremovesubject.php");
-    exit;
 }
 
 // Handle form submission

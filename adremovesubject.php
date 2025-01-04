@@ -16,6 +16,13 @@ if ($conn->connect_error) {
 
 // Fetch subjects from the database
 $subjects = [];
+// Check if the table 'subjects' exists
+$tableExists = $conn->query("SHOW TABLES LIKE 'subjects'");
+if ($tableExists->num_rows == 0) {
+    // Create the table if it does not exist
+    $sql="CREATE TABLE subjects (id INT AUTO_INCREMENT PRIMARY KEY,subject_name VARCHAR(255) NOT NULL,subject_code VARCHAR(100) NOT NULL)";
+    $conn->query($sql);
+}
 $sql = "SELECT id,subject_name, subject_code FROM subjects";
 $result = $conn->query($sql);
 if ($result && $result->num_rows > 0) {
@@ -23,11 +30,7 @@ if ($result && $result->num_rows > 0) {
         $subjects[] = $row;
     }
 }
-else
-{
-    $sql="CREATE TABLE subjects (id INT AUTO_INCREMENT PRIMARY KEY,subject_name VARCHAR(255) NOT NULL,subject_code VARCHAR(100) NOT NULL)";
-     $conn->query($sql);
-}
+
 
 // Handle form submissions
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

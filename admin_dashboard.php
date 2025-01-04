@@ -41,18 +41,18 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['course'])) {
             <h2>Create Examiner</h2>
             <p>Manage and add new examiners for the system.</p>
         </div>
-        <div class="option" onclick="window.location.href='create_student.php';">
+        <div class="option" onclick="window.location.href='addstudentwithexcel.php';">
             <h2>Create Student</h2>
             <p>Manage and add new students for the system.</p>
         </div>
       
     </div>
     <div class="main-options">
-    <div class="option" onclick="window.location.href='listofexaminer.php';">
+    <div class="option" onclick="window.location.href='examinerlist.php';">
             <h2>List of examiner</h2>
             <p>see List of examiner with each details</p>
         </div>
-        <div class="option" onclick="window.location.href='listofstudent.php';">
+        <div class="option" onclick="window.location.href='student_list.php';">
             <h2>List of student</h2>
             <p>see List of student with each details</p>
         </div>

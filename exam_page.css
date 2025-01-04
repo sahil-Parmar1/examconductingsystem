@@ -10,32 +10,60 @@ body {
     font-family: 'Arial', sans-serif;
     background-color: #f4f4f9;
     color: #333;
-    padding: 20px;
     line-height: 1.6;
 }
 
 /* Container Styles */
 .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    
+    
 }
 
 /* Header */
-h1 {
-    font-size: 2rem;
-    margin-bottom: 15px;
-    color: #2c3e50;
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border-bottom: 2px solid #388E3C;
+}
+
+.header h1 {
+    margin: 0;
+    flex: 1;
     text-align: center;
+    color: white;
+    font-size: 24px;
+}
+
+.header div {
+    text-align: right;
+}
+
+.header div h5 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.header div p {
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
 }
 
 /* Timer Styles */
 #timer {
     font-size: 1.5rem;
-    color: #e74c3c;
+    color: #e7dc3c;
     text-align: right;
     font-weight: bold;
     margin: 10px 0;
@@ -43,10 +71,12 @@ h1 {
 
 /* Question Styles */
 .question-container {
-    margin: 20px 0;
+    width: 50%;
     padding: 20px;
     background-color: #ecf0f1;
     border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: left;
 }
 
 .question-container p {
@@ -105,10 +135,37 @@ button#prev {
     margin-right: 10px;
 }
 
+.footer-button:hover {
+    background-color: #45a049; /* Slightly lighter green for hover */
+    color: #ffffff;
+}
+
+.footer-button#submit:hover {
+    background-color: #E64A19; /* Slightly darker orange for hover */
+}
+
+/* Footer */
+.navigation-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 30px;
+    padding-left: 50px;
+    padding-right: 50px;
+    background-color: #f1f1f1;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
 /* Responsive Layout */
 @media (max-width: 768px) {
     .container {
         padding: 10px;
+        flex-direction: column;
+        align-items: stretch;
     }
 
     h1 {
@@ -124,6 +181,7 @@ button#prev {
     }
 
     .question-container {
+        width: 100%;
         padding: 15px;
     }
 }

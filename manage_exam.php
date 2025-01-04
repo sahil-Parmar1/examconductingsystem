@@ -25,8 +25,8 @@ if (!isset($_SESSION['examinerusername']) || !isset($_SESSION['examinercourse'])
         }
     </script>
 <body>
+    <div class="back-button"><a href="examiner_dashboard.php" class="back-button">Home</a></div>
     <h1>Manage Exam</h1>
-    <a href="examiner_dashboard.php"><--</a>
     <h2></h2>
     <?php
     // Database connection
@@ -43,46 +43,71 @@ if (!isset($_SESSION['examinerusername']) || !isset($_SESSION['examinercourse'])
     }
 
     // Fetch data from database
-    $sql = "SELECT * FROM exams WHERE examinerusername = '" . $_SESSION['examinerusername'] . "'";
-    $result = $conn->query($sql);
+    // Check if the exams table exists
+    $tableCheckSql = "SHOW TABLES LIKE 'exams'";
+    $tableCheckResult = $conn->query($tableCheckSql);
 
-    if ($result &&$result->num_rows > 0) {
-        // Output data of each row
-        echo "  <table>
-        <tr>
-            <td>Exam Name</td> 
-            <td>Total Marks</td>
-            <td>Total question</td> 
-            <td>Date of exam</td>
-            <td>Time of exam</td>
-            <td>add questions</td>
-            <td>update</td>
-            <td>delete</td>
-        </tr>";
-        while($row = $result->fetch_assoc()) {
-
-      
-            echo "
-        <tr>
-            <td>".$row['exam_name']."</td>
-      
-            <td>".$row['total_marks']."</td>
-       
-            <td>".$row['total_question']."</td>
-       
-            <td>".$row['dateofexam']."</td>
-       
-            <td>".$row['timeofexam']."</td>
-             <td><a href='question_add.php?exam_id=" . $row['exam_id'] . "'>Add Question</a></td>
-        <td><a href='update_exam.php?exam_id=" . $row['exam_id'] . "'>✏️</a></td>
-        <td><button id='delete' onclick='confirmDeletion(".$row['exam_id'].")'>🗑️</button></td>
-        </tr>";
-           
-        }
-        echo "</table>";
-    } else {
+    if ($tableCheckResult->num_rows == 0) {
         echo "You have not created any exams yet.want to create one? <a href='create_exam.php'>Create Exam</a>";
     }
+    else
+    {
+        $sql = "SELECT * FROM exams WHERE examinerusername = '" . $_SESSION['examinerusername'] . "'";
+        $result = $conn->query($sql);
+    
+        if ($result &&$result->num_rows > 0) {
+            // Output data of each row
+            echo "  <table>
+            <tr>
+                <td>Exam Name</td> 
+                <td>Total Marks</td>
+                <td>Total question</td> 
+                <td>Date of exam</td>
+                <td>Time of exam</td>
+                <td>add questions</td>
+                <td>Download</td>
+                <td>Update Question</td>
+                <td>delete</td>
+            </tr>";
+            while($row = $result->fetch_assoc()) {
+                // Check if the exam_id_exam table exists
+                $tableCheckSql = "SHOW TABLES LIKE '" . $row['exam_id'] . "_exam'";
+                $tableCheckResult = $conn->query($tableCheckSql);
+                  
+                if ($tableCheckResult && $tableCheckResult->num_rows > 0) {
+                   $uploaded=true;  
+                } else {
+                    $uploaded=false;
+                }
+          
+                echo "
+            <tr>
+                <td>".$row['exam_name']."</td>
+          
+                <td>".$row['total_marks']."</td>
+           
+                <td>".$row['total_question']."</td>
+           
+                <td>".$row['dateofexam']."</td>
+           
+                <td>".$row['timeofexam']."</td>";
+                      if($uploaded){
+                          echo "<td style='color: green;'>Uploaded</td>";
+                      }else{
+                        echo "<td><a href='addquestionwithexcel.php?exam_id=" . $row['exam_id'] . "&total_question=".$row['total_question']."'>Upload questions</a></td>";
+                      }
+            echo "<td><a href='download_exam_data.php?exam_id=" . $row['exam_id'] . "'>⏬</a></td>
+            <td><a href='update_exam.php?exam_id=" . $row['exam_id'] . "'>📝</a></td>
+            <td><button id='delete' onclick='confirmDeletion(".$row['exam_id'].")'>🗑️</button></td>
+            </tr>";
+               
+            }
+            echo "</table>";
+        } else {
+            echo "You have not created any exams yet.want to create one? <a href='create_exam.php'>Create Exam</a>";
+        }
+    }
+   
     $conn->close();
     ?>
 </body>

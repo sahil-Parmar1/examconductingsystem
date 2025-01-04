@@ -77,17 +77,61 @@ else
 }
 
 //fecth the raiming exams
-$sql = "SELECT `exam_id` FROM `exams` where semester=$semester";
-$result = $conn->query($sql);
-if ($result && $result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        if (!in_array($row['exam_id'], $attended_exam)) {
-            $remaining_exam[] = $row['exam_id'];
-        }
-    }
-} else {
-    echo "";
+$checkExamsTableSql = "SHOW TABLES LIKE 'exams'";
+$result = $conn->query($checkExamsTableSql);
+if (!$result || $result->num_rows == 0) {
+    echo "Exams table does not exist.";
+    echo "<div id='examPopup' class='popup'>
+                    <div class='popup-content'>
+                        <h2>No Exams plateform Available!</h2>
+                        <p>student login without examiner Please contact your examiner to create exams for your semester.</p>
+                        <button onclick='closePopup()'>Close</button>
+                    </div>
+                  </div>
+                  <script>
+                    function closePopup() {
+                        document.getElementById('examPopup').style.display = 'none';
+                    }
+                  </script>
+                  <style>
+                    .popup {
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background-color: rgba(0, 0, 0, 0.5);
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    }
+                    .popup-content {
+                        background-color: white;
+                        padding: 20px;
+                        border-radius: 5px;
+                        text-align: center;
+                    }
+                    .popup-content button {
+                        margin-top: 10px;
+                    }
+                  </style>";
+    exit;
 }
+else
+{
+    $sql = "SELECT `exam_id` FROM `exams` where semester=$semester";
+    $result = $conn->query($sql);
+    if ($result && $result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            if (!in_array($row['exam_id'], $attended_exam)) {
+                $remaining_exam[] = $row['exam_id'];
+            }
+        }
+    } else {
+        echo "";
+    }  
+}
+
 
 
 if($_SERVER['REQUEST_METHOD']=='POST')
