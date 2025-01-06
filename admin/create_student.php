@@ -129,7 +129,7 @@ if ($conn->connect_error) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Register</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="admin_login.css">
+    <link rel="stylesheet" href="style/admin_login.css">
 </head>
 <body>
     <div class="container">

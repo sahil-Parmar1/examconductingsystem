@@ -105,9 +105,13 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add or Remove Subject</title>
-    <link rel="stylesheet" href="adremovesubject.css">
+    <link rel="stylesheet" href="style/adremovesubject.css">
 </head>
 <body>
+    
+        <a href="admin_dashboard.php" class="back-button">&larr;
+        </a>
+    
     <div class="container">
         <h2>Manage Subjects</h2>
 

@@ -15,7 +15,7 @@ if (!isset($_SESSION['examinerusername']) || !isset($_SESSION['examinercourse'])
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Examiner Dashboard</title>
-    <link rel="stylesheet" href="examiner_dashboard.css">
+    <link rel="stylesheet" href="style/examiner_dashboard.css">
 </head>
 <body>
 <form action="examiner_dashboard.php" method='POST'>
@@ -85,8 +85,8 @@ if (!isset($_SESSION['examinerusername']) || !isset($_SESSION['examinercourse'])
     <div class="main-options">
    
         <div class="option" onclick="window.location.href='listofstudent.php';">
-            <h2>List of student</h2>
-            <p>see List of student with each details</p>
+            <h2>Result</h2>
+            <p>see Result of exam</p>
         </div>
     </div>
 </div>

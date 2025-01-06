@@ -39,7 +39,7 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Examiner List</title>
-    <link rel="stylesheet" href="examinerlist.css">
+    <link rel="stylesheet" href="style/examinerlist.css">
     <script>
          function confirmDeletion(Id) {
             if (confirm("Are you sure you want to delete this exam? This action cannot be undone.")) {
@@ -77,7 +77,7 @@ $conn->close();
             <td><?php echo htmlspecialchars($examiner['subject_name']); ?></td>
             <td><a href="examiner_update.php?id=<?php echo $examiner['examiner_id']; ?>">Update</a></td>
             <td><button id='delete' onclick='confirmDeletion(<?php echo $examiner['examiner_id']; ?>)'>🗑️</button></td>
-            <td><a href="examiner_change_password.php?id=<?php echo $examiner['examiner_id']; ?>">Change Password</a></td>
+            <td><a href="../change_password.php?id=<?php echo $examiner['examiner_id']; ?>&type=examiner&course=<?php echo $_SESSION['course'];?>">Change Password</a></td>
         </tr>
         <?php endforeach; ?>
     </table>

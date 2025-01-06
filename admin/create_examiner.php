@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Examiner</title>
-    <link rel="stylesheet" href="admin_login.css">
+    <link rel="stylesheet" href="style/admin_login.css">
     <script>
         function validateForm() {
             const name = document.getElementById('name').value;
@@ -114,8 +114,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             // Validate password
-            if (password.length < 5) {
-                document.getElementById('passwordError').innerText = 'Password must be at least 5 characters long.';
+            if (!/(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/.test(password)) {
+                document.getElementById('passwordError').innerText = 'Password must contain at least one letter, one digit, and one special symbol.';
                 isValid = false;
             } else {
                 document.getElementById('passwordError').innerText = '';
@@ -142,6 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </script>
 </head>
 <body>
+
     <div class="container">
 <div class="form-container">
     <h2>Create Examiner</h2><br>

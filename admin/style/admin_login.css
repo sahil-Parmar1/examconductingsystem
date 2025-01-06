@@ -96,6 +96,25 @@ button:active {
     font-size: 14px;
     margin-top: 10px;
 }
+.back-button {
+    display: inline-block;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    text-decoration: none;
+    color: white;
+    background-color: #4CAF50;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+    background-color: #45a049;
+}
 
 /* Responsive Design */
 @media (max-width: 480px) {

@@ -1,29 +1,20 @@
 <?php
-require 'vendor/autoload.php';
+require '../vendor/autoload.php';
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 session_start();
-if(isset($_GET['exam_id']) && isset($_GET['total_question']))
-{
-    $_SESSION['exam_id']=$_GET['exam_id'];
-    $_SESSION['total_question']=$_GET['total_question'];
+
+
+if (!isset($_SESSION['username']) || !isset($_SESSION['course'])) {
+    // Redirect to login page
+    header("Location: admin_login.php");
+    exit;
 }
 
-if (!isset($_SESSION['examinerusername']) || !isset($_SESSION['examinercourse'])) {
-    // Redirect to login page
-    header("Location: examiner_login.php");
-    exit;
-}
-if(!isset($_SESSION['exam_id']) && !isset($_SESSION['total_question']))
-{
-    header("Location: examiner_dashboard.php");
-    exit;
-}
-$exam_id=$_SESSION['exam_id'];
-$total_question=$_SESSION['total_question'];
+
 
 // Handle download demo file
 if (isset($_GET['download_demo'])) {
@@ -31,17 +22,18 @@ if (isset($_GET['download_demo'])) {
     $sheet = $spreadsheet->getActiveSheet();
 
     // Set headers
-    $sheet->setCellValue('A1', 'No')
-        ->setCellValue('B1', 'Type')
-        ->setCellValue('C1', 'Question_Option')
-        ->setCellValue('D1', 'Ans')
-        ->setCellValue('E1', 'Question');
+    $sheet->setCellValue('A1', 'id')
+        ->setCellValue('B1', 'roll')
+        ->setCellValue('C1', 'name')
+        ->setCellValue('D1', 'username')
+        ->setCellValue('E1', 'password')
+        ->setCellValue('F1', 'semester');
 
     // Add demo data
     $sheet->fromArray([
-        [1, 'Objective', 'Delhi,,pune,,mumbai,,surat', 'Delhi', 'What is the capital of India?'],
-        [2, 'TF', '-', 'TRUE', 'India is a country.'],
-        [3, 'Fill', '-', '1947', 'India gained independence in?']
+        [1, 78, 'Parmar sahil', 'ty@78','sahil@78',6],
+        [2, 79, 'Parmar Yash', 'ty@79','yash@79',6],
+        [3, 90, 'Patel Adil', 'ty@80','adil@80',6],
     ], null, 'A2');
 
     // Download as Excel file
@@ -50,7 +42,7 @@ if (isset($_GET['download_demo'])) {
     $writer->save($demoFilePath);
 
     header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    header('Content-Disposition: attachment; filename="demo_file.xlsx"');
+    header('Content-Disposition: attachment; filename="demo_student_file.xlsx"');
     readfile($demoFilePath);
     unlink($demoFilePath);
     exit;
@@ -68,15 +60,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['excel_file'])) {
 
             // Check if there are 5 columns
             $columnCount = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($columnCount); // Convert column letter to number
-            if ($rowCount < $total_question + 1) { // +1 to account for the header row
-                echo "<script>alert('The uploaded file contains fewer questions than the required total. minimum ".$total_question." question');</script>";
-                
-            }
-            else if ($columnCount === 5) {
+             if ($columnCount === 6) {
                  $data = $sheet->toArray();
+                 $username=$data[1][3];
+                 $password=$data[1][4];
+                if (!preg_match('/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{3,}$/', $username)) {
+                    echo "<script>alert('Username must contain at least one letter, one number, and one special character.');</script>";
+                   
+                }
+                else if (!preg_match('/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{3,}$/', $password)) {
+                    echo "<script>alert('Password must contain at least one letter, one number, and one special character.');</script>";
+                    
+                }
+                else
+                {
                     $_SESSION['uploaded_data'] = $data;
 
-                    header('Location: ' . $_SERVER['PHP_SELF']);
+                    header('Location: ' . $_SERVER['PHP_SELF']);  
+                }
+                  
 
             } else {
                echo "<script>alert('Please upload a valid file!');</script>";
@@ -100,24 +102,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
          $servername = "localhost";
          $username = "root";
          $password = "";
-         $dbname = $_SESSION['examinercourse'];
+         $dbname = $_SESSION['course'];
          $conn = new mysqli($servername, $username, $password, $dbname);
          if ($conn->connect_error) {
              die("Connection failed: " . $conn->connect_error);
          }
-         $tablename=$exam_id."_exam";
-            $sql = "CREATE TABLE $tablename (`id` INT(25) NOT NULL AUTO_INCREMENT , `type` VARCHAR(25) NOT NULL , `question_option` VARCHAR(100) NOT NULL , `ans` VARCHAR(100) NOT NULL , `question` VARCHAR(200) NOT NULL , PRIMARY KEY (`id`)) ENGINE = MyISAM";
-            if ($conn->query($sql) === TRUE) {
+       
+        $checkTableQuery = "SHOW TABLES LIKE 'student_info'";
+        $result = $conn->query($checkTableQuery);
+         $resultcreate=false;
+        if ($result->num_rows == 0) {
+           $sql="CREATE TABLE `student_info` (`id` INT(200) NOT NULL AUTO_INCREMENT , `roll` INT(200) NOT NULL , `name` VARCHAR(25) NOT NULL , `username` VARCHAR(25) NOT NULL , `password` VARCHAR(25) NOT NULL , `semester` INT(25) NOT NULL , PRIMARY KEY (`id`)) ENGINE = MyISAM";
+           $resultcreate=$conn->query($sql);
+        } 
+        else
+        {
+            $resultcreate=TRUE;
+        }
+        
+            if ($resultcreate === TRUE) {
              //insert the data into the table
                 $j=1;
                for($i=1;$i<count($uploadedData);$i++)
                {
-                   $type=$uploadedData[$i][1];
-                   $question_option=$uploadedData[$i][2];
-                   $ans=$uploadedData[$i][3];
-                   $question=$uploadedData[$i][4];
-                   $sql = "INSERT INTO $tablename (type, question_option, ans, question)
-                   VALUES ('$type', '$question_option', '$ans', '$question')";
+                   $roll=$uploadedData[$i][1];
+                   $name=$uploadedData[$i][2];
+                   $username=$uploadedData[$i][3];
+                   $password=$uploadedData[$i][4];
+                     $semester=$uploadedData[$i][5];
+                   $sql = "INSERT INTO `student_info` (roll, name, username, password, semester)
+                   VALUES ('$roll', '$name', '$username', '$password', '$semester')";
                    if($conn->query($sql) === TRUE)
                    {
                        $j=$j*1;
@@ -131,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                if($j!=0)
                {
                    echo "<script>alert('Data inserted successfully');</script>";
-                  header("Location: manage_exam.php");
+                  header("Location: student_list.php");
                   exit;
                }
                 else
@@ -143,17 +157,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 echo "<script>alert('something went wrong try again');</script>";
             }
         
-         $conn->close();
-     
-        // Insert data into the database
-        // Redirect to the manage_exam.php page
-        header("Location: manage_exam.php");
-        exit;
-     
-
-
-    // Process each question
-    
+        $conn->close();
         unset($_SESSION['uploaded_data']);
     } 
     if (isset($_POST['cancel'])) {
@@ -169,49 +173,52 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Excel File Upload</title>
-    <link rel="stylesheet" href="addquesitonwithexcel.css">
+    <link rel="stylesheet" href="../examiner/style/addquesitonwithexcel.css">
 </head>
 <body>
+
     <h2>Excel File Upload Instructions</h2>
     <div class="instructions">
         <p>Please follow the given syntax for creating your Excel file:</p>
         <table>
             <tr>
-                <th>No</th>
-                <th>Type</th>
-                <th>Question_Option</th>
-                <th>Ans</th>
-                <th>Question</th>
+                <th>id</th>
+                <th>roll</th>
+                <th>name</th>
+                <th>username</th>
+                <th>password</th>
+                <th>semester</th>
             </tr>
             <tr>
                 <td>1</td>
-                <td>Objective</td>
-                <td>option A,,option B,,option C,,option D</td>
-                <td>option A</td>
-                <td>What is the capital of India?</td>
+                <td>78</td>
+                <td>Parmar sahil</td>
+                <td>ty@078</td>
+                <td>sahil@78</td>
+                <td>6</td>
             </tr>
             <tr>
                 <td>2</td>
-                <td>TF</td>
-                <td>-</td>
-                <td>TRUE</td>
-                <td>India is a country.</td>
+                <td>96</td>
+                <td>Purohit jaimin</td>
+                <td>ty@096</td>
+                <td>jaimin@96</td>
+                <td>6</td>
             </tr>
             <tr>
-                <td>3</td>
-                <td>Fill</td>
-                <td>-</td>
-                <td>1947</td>
-                <td>India gained independence in?</td>
+                <td>1</td>
+                <td>118</td>
+                <td>Ven prakash</td>
+                <td>ty@118</td>
+                <td>ven@118</td>
+                <td>6</td>
             </tr>
         </table>
         <p><strong>Note:</strong></p>
         <ul>
-            <li>There are three types of questions: <b>Objective</b>, <b>TF</b> (True/False), and <b>Fill (fill in blank)</b>.</li>
-            <li>For <b>Objective</b> questions, provide four options separated by <code><b>,,</b></code>.</li>
-            <li>For <b>TF</b> or <b>Fill</b>, use <code><b>-</b></code> as an empty indicator for the options.</li>
-            <li>You can add more than <b><?php echo htmlspecialchars($total_question)?></b> as Extra questions</li>
-            <li><a href="?download_demo=true">
+           <li>you must me provide 6 colums (id,roll,name,username,password,semester) in order</li>
+           <li>username must be in the form of student@123 format because it will not change</li>
+           <li><a href="?download_demo=true">
         <button>Download Demo File</button></li>
         </a>
         </ul>

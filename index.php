@@ -16,9 +16,9 @@
         <br>
         <div class="container">
         <h1>Sign In As</h1>
-        <a href="admin_login.php" class="btn">Admin</a>
-        <a href="examiner_login.php" class="btn">Examiner</a>
-        <a href="student_login.php" class="btn">Student</a>
+        <a href="admin/admin_login.php" class="btn">Admin</a>
+        <a href="examiner/examiner_login.php" class="btn">Examiner</a>
+        <a href="student/student_login.php" class="btn">Student</a>
     </div>
     </div>
 </body>

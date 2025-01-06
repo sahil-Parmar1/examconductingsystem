@@ -54,6 +54,7 @@ if ($admin_result->num_rows > 0) {
 } else {
     die("No semester information found for the admin.");
 }
+// Call the JavaScript function to fetch students when the page loads
 
 // Close connection
 $conn->close();
@@ -64,7 +65,7 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student List</title>
-    <link rel="stylesheet" href="student_list.css">
+    <link rel="stylesheet" href="style/student_list.css">
     <script>
         
         // JavaScript function to confirm deletion
@@ -96,7 +97,7 @@ $conn->close();
                                 <td>${student.name}</td>
                                 <td>${student.semester}</td>
                                 <td><a href="updatestudent.php?id=${student.id}">Update</a></td>
-                                <td><a href="changepassword.php?id=${student.id}">Change Password</a></td>
+                                <td><a href="../change_password.php?id=${student.id}&type=student&course=<?php echo $_SESSION['course'];?>">Change Password</a></td>
                                  <td><button id='delete' onclick='confirmDeletion(${student.id})'>🗑️</button></td>
                             </tr>`;
                         });
@@ -112,10 +113,12 @@ $conn->close();
     </script>
 </head>
 <body>
+  
     <a href="admin_dashboard.php" class="back-button">&larr;</a><br><br>
     <form>
         <label for="semester">Select Semester:</label>
         <select name="semester" id="semester" onchange="fetchStudents()">
+            <option value="">--select the semester--</option>
             <option value="all">All</option>
             <?php
             for ($i = 1; $i <= $_SESSION['semester']; $i++) {

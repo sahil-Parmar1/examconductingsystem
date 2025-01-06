@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin creation Form</title>
-    <link rel="stylesheet" href="admin_login.css">
+    <link rel="stylesheet" href="admin/style/admin_login.css">
 </head>
 <body>
     <div class='container'>
@@ -74,8 +74,8 @@
             }
 
             // Password validation
-            if (strlen($password) <= 4) {
-                $errors[] = "Password must be more than 4 characters.";
+            if (!preg_match("/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{1,}$/", $password)) {
+                $errors[] = "Password must contain at least one letter, one number, and one special character.";
             }
 
             // Confirm password match

@@ -80,6 +80,25 @@ if (!isset($_SESSION['examinerusername']) || !isset($_SESSION['examinercourse'])
         button:hover {
             background-color: #218838;
         }
+        .back-button {
+            display: inline-block;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            text-decoration: none;
+            color: white;
+            background-color: #4CAF50;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #45a049;
+        }
     </style>
     <script>
     function validateForm(event) {
@@ -169,6 +188,7 @@ if (!isset($_SESSION['examinerusername']) || !isset($_SESSION['examinercourse'])
 
 </head>
 <body>
+<a href="examiner_dashboard.php" class="back-button">&larr;</a><br><br>
     <h1>Exam Information</h1>
     <form method="POST" action="" onsubmit="validateForm(event)">
     <div class="form-group">

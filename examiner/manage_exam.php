@@ -10,7 +10,7 @@ if (!isset($_SESSION['examinerusername']) || !isset($_SESSION['examinercourse'])
 <html>
 <head>
     <title>Manage Exam</title>
-    <link rel="stylesheet" href="manage_exam.css">
+    <link rel="stylesheet" href="style/manage_exam.css">
 </head>
 <script>
         // JavaScript function to confirm deletion
@@ -25,7 +25,7 @@ if (!isset($_SESSION['examinerusername']) || !isset($_SESSION['examinercourse'])
         }
     </script>
 <body>
-    <div class="back-button"><a href="examiner_dashboard.php" class="back-button">Home</a></div>
+  <a href="examiner_dashboard.php" class="back-button">&larr;</a><br><br>
     <h1>Manage Exam</h1>
     <h2></h2>
     <?php

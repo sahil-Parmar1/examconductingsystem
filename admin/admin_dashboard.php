@@ -15,7 +15,7 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['course'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="admin_dashboard.css">
+    <link rel="stylesheet" href="style/admin_dashboard.css">
 </head>
 <body>
 
@@ -25,12 +25,12 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['course'])) {
 </header>
 
 <div class="sidebar">
-    <a href="#">Settings</a>
+    
     <a href="adremovesubject.php">Add & Update Subject</a>
-    <a href="#">Change Password</a>
-    <a href="#">Change Password for Students</a>
-    <a href="#">Change Password for Examiners</a>
-    <a href="#">Logout</a>
+    <a href="../change_password.php?id=1&type=admin&course=<?php echo $_SESSION['course'];?>">Change Password</a>
+    <a href="student_list.php">Change Password for Students</a>
+    <a href="examinerlist.php">Change Password for Examiners</a>
+    <a href="../logout.php">Logout</a>
 </div>
 
 <div class="content">

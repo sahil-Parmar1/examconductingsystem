@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login</title>
-    <link rel="stylesheet" href="admin_login.css">
+    <link rel="stylesheet" href="style/admin_login.css">
 </head>
 <body>
     <div class="container">
@@ -28,7 +28,7 @@
             </div>
             <div class="form-group">
                 <label for="password">Password:</label>
-                <input type="password" id="password" name="password" minlength="4" title="Password must be at least 4 characters long" required>
+                <input type="password" id="password" name="password"  required>
             </div>
             
             <button type="submit">Login</button>

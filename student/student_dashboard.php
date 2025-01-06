@@ -151,7 +151,7 @@ if($_SERVER['REQUEST_METHOD']=='POST')
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Dashboard</title>
-    <link rel="stylesheet" href="student_dashboard.css">
+    <link rel="stylesheet" href="style/student_dashboard.css">
 </head>
 <body>
     <form action="student_dashboard.php" method="POST">
