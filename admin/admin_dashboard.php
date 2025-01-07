@@ -18,12 +18,6 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['course'])) {
     <link rel="stylesheet" href="style/admin_dashboard.css">
 </head>
 <body>
-
-<header>
-    <h1>Welcome to Admin Dashboard, <?php echo htmlspecialchars($_SESSION['username']); ?>!</h1>
-    <h2><?php echo htmlspecialchars($_SESSION['course']) ?> examination</h2>
-</header>
-
 <div class="sidebar">
     
     <a href="adremovesubject.php">Add & Update Subject</a>
@@ -32,6 +26,12 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['course'])) {
     <a href="examinerlist.php">Change Password for Examiners</a>
     <a href="../logout.php">Logout</a>
 </div>
+<header>
+    <h1>Welcome to Admin Dashboard, <?php echo htmlspecialchars($_SESSION['username']); ?>!</h1>
+    <h2><?php echo htmlspecialchars($_SESSION['course']) ?> examination</h2>
+</header>
+
+
 
 <div class="content">
     <h2>Main Options</h2>

@@ -259,7 +259,7 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Exam Timer</title>
-    <link rel="stylesheet" href="exam_page.css">
+    <link rel="stylesheet" href="style/exam_page.css">
   
     <script>
         let duration = <?php echo $duration; ?>;
